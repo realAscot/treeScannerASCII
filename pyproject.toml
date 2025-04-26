@@ -1,0 +1,15 @@
+[project]
+name = "treescanner"
+version = "0.1.0"
+description = "Ein Verzeichnisscanner als CLI-Tool und Python-Modul"
+authors = [
+  { name="Adam Skotarczak", email="adam@skotarczak.net" }
+]
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+keywords = ["filesystem", "tree", "scanner", "cli", "modul"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
