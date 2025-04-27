@@ -1,5 +1,13 @@
 # CHANGELOG
 
+- **2025-04-27 - Commit v0.2.0**
+
+  - **Hinzugefügt:**  
+    - [x] Ausgabe der Anzahl gescannter Verzeichnisse und Dateien nach Abschluss
+    - [x] Mehrsprachigkeit für Abschlussmeldung vorbereitet (Deutsch/Englisch)
+
+---
+
 - **2025-04-26 – Commit v0.1.0**
 
   - **Geändert:**  
