@@ -1,5 +1,10 @@
 # CHANGELOG
 
+- **2025-04-27 - Commit v0.2.1**
+
+  - **Geändert:**  
+    - [x] `scanner.py`: Vollständige Google-Style-Docstrings und saubere Kommentare hinzugefügt (keine Funktionsänderung).
+
 - **2025-04-27 - Commit v0.2.0**
 
   - **Hinzugefügt:**  
