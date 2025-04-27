@@ -1,15 +1,24 @@
 # CHANGELOG
 
-- **2025-04-27 - Commit v0.2.1**
+- **2025-04-27 - Commit v0.2.1**  
 
   - **Geändert:**  
-    - [x] `scanner.py`: Vollständige Google-Style-Docstrings und saubere Kommentare hinzugefügt (keine Funktionsänderung).
+    - [x] `README.md` angepasst  
 
-- **2025-04-27 - Commit v0.2.0**
+---
+
+- **2025-04-27 - Commit v0.2.1**  
+
+  - **Geändert:**  
+    - [x] `scanner.py`: Vollständige Google-Style-Docstrings und saubere Kommentare hinzugefügt (keine Funktionsänderung).  
+
+---
+
+- **2025-04-27 - Commit v0.2.0**  
 
   - **Hinzugefügt:**  
-    - [x] Ausgabe der Anzahl gescannter Verzeichnisse und Dateien nach Abschluss
-    - [x] Mehrsprachigkeit für Abschlussmeldung vorbereitet (Deutsch/Englisch)
+    - [x] Ausgabe der Anzahl gescannter Verzeichnisse und Dateien nach Abschluss  
+    - [x] Mehrsprachigkeit für Abschlussmeldung vorbereitet (Deutsch/Englisch)  
 
 ---
 
