@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 import os
 import argparse
+import time
 from typing import Optional, List
 
 class TreeScannerConfig:
@@ -13,6 +15,8 @@ class TreeScannerConfig:
         max_depth (Optional[int]): Maximale Rekursionstiefe.
         align_comments (bool): Kommentare am Zeilenende ausrichten.
         language (str): Sprache der Programmausgabe (de oder en).
+        output_file (str): Pfad und Name der Ausgabedatei.
+        ignored_dirs (Optional[List[str]]): Liste von Verzeichnissen, die ignoriert werden sollen.
     """
 
     def __init__(
@@ -20,10 +24,12 @@ class TreeScannerConfig:
         root_path: str = ".",
         folder_icon: str = "\U0001F4C1",
         file_icon: str = "\U0001F4C4",
-        max_files_per_dir: int = 2,
+        max_files_per_dir: int = 100,
         max_depth: Optional[int] = None,
         align_comments: bool = True,
-        language: str = "de"
+        language: str = "de",
+        output_file: str = "tree.txt",
+        ignored_dirs: Optional[List[str]] = None
     ):
         self.root_path = root_path
         self.folder_icon = folder_icon
@@ -32,6 +38,8 @@ class TreeScannerConfig:
         self.max_depth = max_depth
         self.align_comments = align_comments
         self.language = language
+        self.output_file = output_file
+        self.ignored_dirs = ignored_dirs or []
 
 class TreeScanner:
     """Klasse zum Scannen von Verzeichnissen und Erzeugen einer ASCII-Baumstruktur."""
@@ -42,6 +50,7 @@ class TreeScanner:
         Args:
             config (TreeScannerConfig): Konfiguration für den Scanner.
         """
+        self.last_output = time.time()
         self.config = config
         self.folder_count = 0
         self.file_count = 0
@@ -71,7 +80,7 @@ class TreeScanner:
         except PermissionError:
             return [f"{prefix}└── [Zugriff verweigert] {path}"]
 
-        folders = [e for e in entries if os.path.isdir(os.path.join(path, e))]
+        folders = [e for e in entries if os.path.isdir(os.path.join(path, e)) and e not in self.config.ignored_dirs]
         files = [e for e in entries if os.path.isfile(os.path.join(path, e))]
 
         for idx, folder in enumerate(folders):
@@ -92,6 +101,10 @@ class TreeScanner:
         for idx, name in enumerate(combined):
             if not name.startswith("<und "):
                 self.file_count += 1
+                if time.time() - self.last_output >= 5:
+                    print(f"[Info] {self.folder_count + self.file_count} Einträge gescannt...", flush=True)
+                    self.last_output = time.time()
+
             connector = "├── " if idx < len(combined) - 1 else "└── "
             lines.append(f"{prefix}{connector}{self.config.file_icon} {name}")
 
@@ -144,23 +157,44 @@ def main():
     parser.add_argument("-d", "--max-depth", type=int, help="Maximale Rekursionstiefe; unbegrenzt, wenn nicht gesetzt.")
     parser.add_argument("--no-align-comments", action="store_false", dest="align_comments", help="Deaktiviert das Ausrichten der Kommentare am Zeilenende.")
     parser.add_argument("-l", "--language", type=str, default="de", choices=["de", "en"], help="Sprache der Programmausgabe (de oder en).")
+    parser.add_argument(
+    "--ignore", "-x",
+    action="append",
+    help="Verzeichnisse, die ignoriert werden sollen (z. B. .git, __pycache__). Mehrfach verwendbar."
+    )
+
+    parser.add_argument("-o", "--output", type=str, help="Pfad und Name der Ausgabedatei (Standard: tree.txt)")
+
     args = parser.parse_args()
+
+    output_file = args.output if args.output else "tree.txt"
+    ignored_dirs = args.ignore if args.ignore else []
+
+    # Pfad validieren
+    if not os.path.isdir(args.root_path):
+        print(f"Fehler: Der angegebene Pfad '{args.root_path}' ist kein gültiges Verzeichnis oder anderer falscher Parameter.")
+        return
+
+    output_dir = os.path.dirname(output_file)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
 
     config = TreeScannerConfig(
         root_path=args.root_path,
         max_files_per_dir=args.max_files_per_dir,
         max_depth=args.max_depth,
         align_comments=args.align_comments,
-        language=args.language
+        language=args.language,
+        output_file=output_file,
+        ignored_dirs=ignored_dirs
     )
     scanner = TreeScanner(config)
     tree_output = scanner.generate_tree()
 
-    output_file = "tree.txt"
-    with open(output_file, "w", encoding="utf-8") as f:
+    with open(config.output_file, "w", encoding="utf-8") as f:
         f.write(tree_output + "\n")
 
-    scanner.print_summary(output_file)
+    scanner.print_summary(config.output_file)
 
 if __name__ == "__main__":
     main()
