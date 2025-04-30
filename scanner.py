@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import argparse
 from typing import Optional, List
@@ -13,6 +14,7 @@ class TreeScannerConfig:
         max_depth (Optional[int]): Maximale Rekursionstiefe.
         align_comments (bool): Kommentare am Zeilenende ausrichten.
         language (str): Sprache der Programmausgabe (de oder en).
+        output_file (str): Pfad und Name der Ausgabedatei.
     """
 
     def __init__(
@@ -20,10 +22,11 @@ class TreeScannerConfig:
         root_path: str = ".",
         folder_icon: str = "\U0001F4C1",
         file_icon: str = "\U0001F4C4",
-        max_files_per_dir: int = 2,
+        max_files_per_dir: int = 100,
         max_depth: Optional[int] = None,
         align_comments: bool = True,
-        language: str = "de"
+        language: str = "de",
+        output_file: str = "tree.txt"
     ):
         self.root_path = root_path
         self.folder_icon = folder_icon
@@ -32,6 +35,7 @@ class TreeScannerConfig:
         self.max_depth = max_depth
         self.align_comments = align_comments
         self.language = language
+        self.output_file = output_file
 
 class TreeScanner:
     """Klasse zum Scannen von Verzeichnissen und Erzeugen einer ASCII-Baumstruktur."""
@@ -144,23 +148,30 @@ def main():
     parser.add_argument("-d", "--max-depth", type=int, help="Maximale Rekursionstiefe; unbegrenzt, wenn nicht gesetzt.")
     parser.add_argument("--no-align-comments", action="store_false", dest="align_comments", help="Deaktiviert das Ausrichten der Kommentare am Zeilenende.")
     parser.add_argument("-l", "--language", type=str, default="de", choices=["de", "en"], help="Sprache der Programmausgabe (de oder en).")
+    parser.add_argument("-o", "--output", type=str, help="Pfad und Name der Ausgabedatei (Standard: tree.txt)")
+
     args = parser.parse_args()
+
+    output_file = args.output if args.output else "tree.txt"
+    output_dir = os.path.dirname(output_file)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
 
     config = TreeScannerConfig(
         root_path=args.root_path,
         max_files_per_dir=args.max_files_per_dir,
         max_depth=args.max_depth,
         align_comments=args.align_comments,
-        language=args.language
+        language=args.language,
+        output_file=output_file
     )
     scanner = TreeScanner(config)
     tree_output = scanner.generate_tree()
 
-    output_file = "tree.txt"
-    with open(output_file, "w", encoding="utf-8") as f:
+    with open(config.output_file, "w", encoding="utf-8") as f:
         f.write(tree_output + "\n")
 
-    scanner.print_summary(output_file)
+    scanner.print_summary(config.output_file)
 
 if __name__ == "__main__":
     main()
