@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import argparse
+import time
 from typing import Optional, List
 
 class TreeScannerConfig:
@@ -49,6 +50,7 @@ class TreeScanner:
         Args:
             config (TreeScannerConfig): Konfiguration für den Scanner.
         """
+        self.last_output = time.time()
         self.config = config
         self.folder_count = 0
         self.file_count = 0
@@ -99,6 +101,10 @@ class TreeScanner:
         for idx, name in enumerate(combined):
             if not name.startswith("<und "):
                 self.file_count += 1
+                if time.time() - self.last_output >= 5:
+                    print(f"[Info] {self.folder_count + self.file_count} Einträge gescannt...", flush=True)
+                    self.last_output = time.time()
+
             connector = "├── " if idx < len(combined) - 1 else "└── "
             lines.append(f"{prefix}{connector}{self.config.file_icon} {name}")
 

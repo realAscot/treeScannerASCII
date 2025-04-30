@@ -33,6 +33,8 @@ python scanner.py [root_path] [-n N] [-d DEPTH] [--no-align-comments] [-l {de,en
 | `-d`, `--max-depth`         | Maximale Tiefe der Rekursion; unbegrenzt, wenn nicht gesetzt.                                                 |
 | `--no-align-comments`       | Deaktiviert die Ausrichtung der Kommentar-Platzhalter am Zeilenende.                                          |
 | `-l`, `--language`          | Sprache der Abschlussmeldung (`de` für Deutsch, `en` für Englisch; Default: `de`).                           |
+| `-x`, `--ignore`             | Ignoriert angegebene Verzeichnisse rekursiv (z. B. `.git`, `__pycache__`). Mehrfach möglich.                 |
+| `-o`, `--output`             | Zielpfad der Ausgabedatei (z. B. `tree.txt` oder `logs/struktur.txt`)                                       |
 | `-h`, `--help`              | Zeigt diese Hilfe an und beendet das Programm.                                                               |
 
 **Ausgabe:**
@@ -70,6 +72,8 @@ print(output)
 | `max_depth: Optional[int]`  | Ganzzahl oder None | Maximale Rekursionstiefe; `None` = unbegrenzt                       |
 | `align_comments: bool`      | Bool               | Kommentare am Zeilenende ausrichten (Default: `True`)               |
 | `language: str`             | String             | Sprache der Zusammenfassung (`de` oder `en`) (Default: `de`)        |
+| `output_file: str`          | String             | Dateiname und Pfad der Ausgabe-Datei (Default: `tree.txt`)          |
+| `ignored_dirs: List[str]`   | Liste von Strings  | Verzeichnisse, die rekursiv ignoriert werden sollen (z. B. `.git`) |
 
 ## 📄 Beispielausgabe (tree.txt)
 
@@ -94,13 +98,14 @@ print(output)
 - Mehrsprachige Abschlussmeldung (Deutsch, Englisch)
 - Ausgabe als Textdatei (`tree.txt`)
 - Saubere Google-Style Docstrings für IDE-Kompatibilität
+- Fortschrittsanzeige bei großen Scans (alle 5 Sekunden automatische Statusmeldung)
+- Ignorieren beliebiger Verzeichnisse rekursiv via `--ignore`
+- Konfigurierbarer Ausgabe-Dateiname/-Pfad via `--output`
 - Modularer Aufbau für spätere Erweiterungen
 
 ## 🛡️ Geplante Erweiterungen
 
-- Bessere Fehlerbehandlung bei ungültigem Pfad (anstatt Absturz)
 - Farbliche Ausgabe der Baumstruktur in der Konsole (optional)
-- Konfigurierbare Ausgabe-Datei über CLI
 - Vorbereitung für Unicode-optimierte Konsolen
 
 ## 📄 Lizenz
