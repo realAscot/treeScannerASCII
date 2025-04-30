@@ -15,6 +15,7 @@ class TreeScannerConfig:
         align_comments (bool): Kommentare am Zeilenende ausrichten.
         language (str): Sprache der Programmausgabe (de oder en).
         output_file (str): Pfad und Name der Ausgabedatei.
+        ignored_dirs (Optional[List[str]]): Liste von Verzeichnissen, die ignoriert werden sollen.
     """
 
     def __init__(
@@ -26,7 +27,8 @@ class TreeScannerConfig:
         max_depth: Optional[int] = None,
         align_comments: bool = True,
         language: str = "de",
-        output_file: str = "tree.txt"
+        output_file: str = "tree.txt",
+        ignored_dirs: Optional[List[str]] = None
     ):
         self.root_path = root_path
         self.folder_icon = folder_icon
@@ -36,6 +38,7 @@ class TreeScannerConfig:
         self.align_comments = align_comments
         self.language = language
         self.output_file = output_file
+        self.ignored_dirs = ignored_dirs or []
 
 class TreeScanner:
     """Klasse zum Scannen von Verzeichnissen und Erzeugen einer ASCII-Baumstruktur."""
@@ -75,7 +78,7 @@ class TreeScanner:
         except PermissionError:
             return [f"{prefix}└── [Zugriff verweigert] {path}"]
 
-        folders = [e for e in entries if os.path.isdir(os.path.join(path, e))]
+        folders = [e for e in entries if os.path.isdir(os.path.join(path, e)) and e not in self.config.ignored_dirs]
         files = [e for e in entries if os.path.isfile(os.path.join(path, e))]
 
         for idx, folder in enumerate(folders):
@@ -148,11 +151,24 @@ def main():
     parser.add_argument("-d", "--max-depth", type=int, help="Maximale Rekursionstiefe; unbegrenzt, wenn nicht gesetzt.")
     parser.add_argument("--no-align-comments", action="store_false", dest="align_comments", help="Deaktiviert das Ausrichten der Kommentare am Zeilenende.")
     parser.add_argument("-l", "--language", type=str, default="de", choices=["de", "en"], help="Sprache der Programmausgabe (de oder en).")
+    parser.add_argument(
+    "--ignore", "-x",
+    action="append",
+    help="Verzeichnisse, die ignoriert werden sollen (z. B. .git, __pycache__). Mehrfach verwendbar."
+    )
+
     parser.add_argument("-o", "--output", type=str, help="Pfad und Name der Ausgabedatei (Standard: tree.txt)")
 
     args = parser.parse_args()
 
     output_file = args.output if args.output else "tree.txt"
+    ignored_dirs = args.ignore if args.ignore else []
+
+    # Pfad validieren
+    if not os.path.isdir(args.root_path):
+        print(f"Fehler: Der angegebene Pfad '{args.root_path}' ist kein gültiges Verzeichnis oder anderer falscher Parameter.")
+        return
+
     output_dir = os.path.dirname(output_file)
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
@@ -163,7 +179,8 @@ def main():
         max_depth=args.max_depth,
         align_comments=args.align_comments,
         language=args.language,
-        output_file=output_file
+        output_file=output_file,
+        ignored_dirs=ignored_dirs
     )
     scanner = TreeScanner(config)
     tree_output = scanner.generate_tree()
