@@ -1,4 +1,37 @@
 #!/usr/bin/env python3
+
+"""
+ © 2025 Adam Skotarczak (adam@skotarczak.net) v0.3.1 (01.05.2025)
+A standalone directory scanner that can also be integrated as a module.
+In its current version, simply place the file into any directory and execute it with python scanner.py.
+The script generates a tree.txt file containing the complete directory structure in ASCII format.
+I developed this tool to conveniently document directory trees, particularly for use in Markdown READMEs.  
+
+usage: scanner.py [-h] [-n MAX_FILES_PER_DIR] [-d MAX_DEPTH] [--no-align-comments] [-l {de,en}] [--ignore IGNORE]
+                  [-o OUTPUT]
+                  [root_path]
+
+Generiert eine ASCII-Baumstruktur eines Verzeichnisses.
+
+positional arguments:
+  root_path             Pfad des Stammverzeichnisses (default: aktuelles Verzeichnis).
+
+options:
+  -h, --help            show this help message and exit
+  -n, --max-files-per-dir MAX_FILES_PER_DIR
+                        Maximale Anzahl Dateien pro Verzeichnis (default: 2).
+  -d, --max-depth MAX_DEPTH
+                        Maximale Rekursionstiefe; unbegrenzt, wenn nicht gesetzt.
+  --no-align-comments   Deaktiviert das Ausrichten der Kommentare am Zeilenende.
+  -l, --language {de,en}
+                        Sprache der Programmausgabe (de oder en).
+  --ignore, -x IGNORE   Verzeichnisse, die ignoriert werden sollen (z.B. .git, __pycache__). Mehrfach verwendbar.
+  -o, --output OUTPUT   Pfad und Name der Ausgabedatei (Standard: tree.txt)
+
+
+Original File: <https://github.com/realAscot/treeScannerASCII/blob/main/scanner.py>
+"""
+
 import os
 import argparse
 import time
@@ -160,7 +193,7 @@ def main():
     parser.add_argument(
     "--ignore", "-x",
     action="append",
-    help="Verzeichnisse, die ignoriert werden sollen (z. B. .git, __pycache__). Mehrfach verwendbar."
+    help="Verzeichnisse, die ignoriert werden sollen (z.B. .git, __pycache__). Mehrfach verwendbar."
     )
 
     parser.add_argument("-o", "--output", type=str, help="Pfad und Name der Ausgabedatei (Standard: tree.txt)")

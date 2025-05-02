@@ -1,5 +1,11 @@
 # CHANGELOG - treeScannerASCII
 
+- **2025-05-01 Commit v0.3.1**  
+
+  - **Geändert:**  
+    - [x] `scanner.py` um Lizenz und Anleitung ergänzt. Wurde beim letzten Commit vergessen.
+          ausserdem hat sich in die Datei Unicode eingeschlichen der dort nicht hingehörte.
+
 - **2025-04-30 Commit v0.3.0**  
 
   - **Geändert:**  
@@ -10,7 +16,7 @@
   - **Hinzugefügt:**  
     - [x] Unterstützung für Paket-Ausführung via `python -m treeScannerASCII`  
       - Leeres `__init__.py` beibehalten  
-      - `__main__.py` mit Fallback-Import (`relative` + `direct`) implementiert
+      - `__main__.py` mit Fallback-Import (`relative` + `direct`) implementiert  
 
 - **2025-04-27 - Commit v0.2.1**  
 
